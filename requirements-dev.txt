@@ -2,3 +2,5 @@
 coverage
 flake8
 pre-commit
+build
+twine

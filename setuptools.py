@@ -1,15 +1,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="geojson_renderer",
+    name="geojson_composer",
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "Jinja2",
+        "Jinja2>=3.0",
     ],
     entry_points={
         "console_scripts": [
-            "geojson-renderer=geojson_renderer.cli:main",
+            "geojson-composer=geojson_composer.cli:main",
         ],
     },
     author="Krvss",

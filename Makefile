@@ -33,4 +33,8 @@ clean:
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 
-.PHONY: test test-coverage lint install install-dev clean
+# Build
+build:
+	$(PYTHON) -m build
+
+.PHONY: test test-coverage lint install install-dev clean build

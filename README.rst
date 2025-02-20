@@ -1,12 +1,12 @@
 ##########################
-GeoJSON Template Renderer
+GeoJSON Composer
 ##########################
 
 *********
 Overview
 *********
 
-This project is a GeoJSON template renderer that processes GeoJSON files and applies Jinja2 templates to generate customized output. It supports:
+This project is a `GeoJSON<https://en.wikipedia.org/wiki/GeoJSON>`_ template renderer that processes GeoJSON files and applies `Jinja2 <https://github.com/pallets/jinja>`_ templates to generate customized output. It supports:
 
 * Processing single or multiple GeoJSON files
 
@@ -54,7 +54,7 @@ Arguments:
 
 Example Command:::
 
- python main.py data/sample.geojson templates/output.j2 --output result.geojson
+ python main.py geojson_data/ templates/output.jinja --output result.geojson
 
 Development
 *********
