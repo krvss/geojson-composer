@@ -35,6 +35,11 @@ clean:
 
 # Build
 build:
+	rm -rf dist
 	$(PYTHON) -m build
 
-.PHONY: test test-coverage lint install install-dev clean build
+# Publish to PyPI
+publish:
+	$(PYTHON) -m twine upload dist/*	
+
+.PHONY: test test-coverage lint install install-dev clean build publish
