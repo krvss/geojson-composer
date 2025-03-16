@@ -36,10 +36,11 @@ clean:
 # Build
 build:
 	rm -rf dist
-	$(PYTHON) -m build
+	$(PYTHON) -m build --wheel
 
 # Publish to PyPI
 publish:
+	$(PYTHON) -m twine check dist/*
 	$(PYTHON) -m twine upload dist/*	
 
 .PHONY: test test-coverage lint install install-dev clean build publish

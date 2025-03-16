@@ -17,7 +17,7 @@ This project is a `GeoJSON <https://en.wikipedia.org/wiki/GeoJSON>`_ template re
 * Command-line interface (CLI) support
 
 Installation
-*********
+************
 
 Prerequisites
 =============
@@ -27,7 +27,7 @@ Prerequisites
 2. pip package manager
 
 Install Dependencies
-=============
+====================
 
 To install production dependencies::
 
@@ -57,7 +57,7 @@ Example Command:::
  python main.py geojson_data/ templates/output.jinja --output result.geojson
 
 Development
-*********
+***********
 
 Running Tests::
 
@@ -72,7 +72,7 @@ Linting Code::
  make lint
 
 License
-*********
+*******
 
 This project is licensed under the MIT License. Contact the author https://github.com/krvss for more information.
 
