@@ -10,6 +10,12 @@ import sys
 logging.basicConfig(level=logging.INFO)
 
 ID = "id"
+NAME = "name"
+TITLE = "title"
+DESCRIPTION = "description"
+URL = "url"
+IMAGES = "images"
+
 FEATURES = "features"
 PROPERTIES = "properties"
 GROUPS_PROPERTY = "groups"
@@ -27,6 +33,34 @@ def dict_update_if(target: dict, condition: dict, updates: dict) -> dict:
         if all(target.get(k) == v for k, v in condition.items())
         else target
     )
+
+
+def compile_description(feature: dict) -> dict:
+    """Compile the description of the feature.
+
+    Args:
+        feature (dict): the feature dictionary
+
+    Returns:
+        dict: feature with compiled description (URL and images HTML)
+    """
+    name = feature.get(PROPERTIES, {}).get("name", "") \
+        or feature.get(PROPERTIES, {}).get("title", "")
+    url = feature.get(PROPERTIES, {}).get("url", "")
+    description = feature.get(PROPERTIES, {}).get("description", "")
+
+    if url and name:
+        description = f'<a href="{url}">{name}</a>{description}'
+
+    images = feature.get(PROPERTIES, {}).get("images", [])
+    if images:
+        for image in images:
+            description += f'<img src="{image}">'
+
+    if description:
+        feature[PROPERTIES][DESCRIPTION] = description
+
+    return feature
 
 
 def load_json(filename: str) -> dict:
@@ -81,6 +115,7 @@ def render_template(template_path: str, geojson: dict) -> str:
     env = Environment(loader=FileSystemLoader(os.path.dirname(template_path)))
     env.filters["dict_update"] = dict_update
     env.filters["dict_update_if"] = dict_update_if
+    env.filters["compile_description"] = compile_description
 
     template = env.get_template(os.path.basename(template_path))
     features = geojson.get(FEATURES, [])

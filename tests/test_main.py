@@ -6,6 +6,12 @@ from geojson_composer.main import (
     group_features,
     render_template,
     process_files,
+    compile_description,
+    dict_update_if,
+    dict_update,
+    FEATURES,
+    PROPERTIES,
+    DESCRIPTION
 )
 
 TEST_DATA_FILE = "sample.geojson"
@@ -17,7 +23,12 @@ SAMPLE_GEOJSON_DATA = {
     "features": [
         {
             "type": "Feature",
-            "properties": {"id": 1, "category": "park", "groups": ["nature"]},
+            "properties": {
+                "id": 1,
+                "category": "park",
+                "groups": ["nature"],
+                "name": "DeKorte Park"
+            },
             "geometry": {
                 "type": "Point",
                 "coordinates": [-74.10313031539833, 40.786026939284284],
@@ -25,7 +36,13 @@ SAMPLE_GEOJSON_DATA = {
         },
         {
             "type": "Feature",
-            "properties": {"id": 2, "category": "museum"},
+            "properties": {
+                "id": 2,
+                "category": "museum",
+                "title": "The Met",
+                "description": "test",
+                "url": "https://www.metmuseum.org/"
+            },
             "geometry": {
                 "type": "Point",
                 "coordinates": [-73.96324400190692, 40.779688420833835],
@@ -37,6 +54,7 @@ SAMPLE_GEOJSON_DATA = {
                 "id": 3,
                 "category": "botanical garden",
                 "groups": ["culture", "nature"],
+                "images": ["https://njbg.org/logo.png"],
             },
             "geometry": {
                 "type": "Point",
@@ -79,13 +97,15 @@ class TestMainFunctions(unittest.TestCase):
     def test_load_json(self):
         """Test JSON file loading."""
         data = load_json(str(self.sample_geojson))
+
         self.assertIsInstance(data, dict)
-        self.assertIn("features", data)
-        self.assertEqual(len(data["features"]), 3)
+        self.assertIn(FEATURES, data)
+        self.assertEqual(len(data[FEATURES]), 3)
 
     def test_group_features(self):
         """Test feature grouping function."""
-        grouped = group_features(SAMPLE_GEOJSON_DATA["features"])
+        grouped = group_features(SAMPLE_GEOJSON_DATA[FEATURES])
+
         self.assertIn("nature", grouped)
         self.assertEqual(len(grouped["nature"]), 2)
         self.assertNotIn("park", grouped)  # Shouldn't group by category
@@ -97,10 +117,10 @@ class TestMainFunctions(unittest.TestCase):
             SAMPLE_GEOJSON_DATA,
         )
 
-        self.assertIn('"features"', output)  # Ensure features are rendered
+        self.assertIn(FEATURES, output)  # Ensure features are rendered
         parsed_output = json.loads(output)
         self.assertEqual(parsed_output["type"], "FeatureCollection")
-        self.assertEqual(len(parsed_output["features"]), 2)
+        self.assertEqual(len(parsed_output[FEATURES]), 2)
 
     def test_process_files(self):
         """Test full processing from input to output."""
@@ -116,8 +136,50 @@ class TestMainFunctions(unittest.TestCase):
         with open(output_file, "r", encoding="utf-8") as f:
             output_data = json.load(f)
 
-        self.assertIn("features", output_data)
-        self.assertEqual(len(output_data["features"]), 2)
+        self.assertIn(FEATURES, output_data)
+        self.assertEqual(len(output_data[FEATURES]), 2)
+
+
+class TestFilters(unittest.TestCase):
+
+    def test_dict_update(self):
+        """Test the dict_update filter."""
+
+        base_dict = {"a": 1, "b": 2}
+        update_dict = {"b": 3, "c": 4}
+
+        updated = dict_update(base_dict, update_dict)
+        self.assertEqual(updated, {"a": 1, "b": 3, "c": 4})
+
+    def test_dict_update_if(self):
+        """Test the dict_update_if filter."""
+
+        base_dict = {"a": 1, "b": 2}
+        condition_dict = {"b": 2}
+        update_dict = {"b": 3, "c": 4}
+
+        updated = dict_update_if(base_dict, condition_dict, update_dict)
+        self.assertEqual(updated, {"a": 1, "b": 3, "c": 4})
+
+    def test_compile_no_description(self):
+        feature = SAMPLE_GEOJSON_DATA[FEATURES][0]
+
+        compiled = compile_description(feature)[PROPERTIES].get(DESCRIPTION)
+        self.assertIsNone(compiled)
+
+    def test_compile_description_url(self):
+        """Test the compile_description filter."""
+        feature = SAMPLE_GEOJSON_DATA[FEATURES][1]
+
+        compiled = compile_description(feature)[PROPERTIES][DESCRIPTION]
+        self.assertEqual(compiled, '<a href="https://www.metmuseum.org/">The Met</a>test')
+
+    def test_compile_description_images(self):
+        """Test the compile_description filter."""
+        feature = SAMPLE_GEOJSON_DATA[FEATURES][2]
+
+        compiled = compile_description(feature)[PROPERTIES][DESCRIPTION]
+        self.assertEqual(compiled, '<img src="https://njbg.org/logo.png">')
 
 
 if __name__ == "__main__":
