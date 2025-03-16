@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geojson-composer"               # Package name (must be unique on PyPI)
-version = "0.1.1"
+version = "0.1.2"
 description = "A CLI tool to render GeoJSON data using Jinja2 templates."
 authors = [{ name = "Stas Kravets", email = "stas.kravets@gmail.com" }]
 readme = "README.md"
