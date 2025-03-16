@@ -35,32 +35,31 @@ def dict_update_if(target: dict, condition: dict, updates: dict) -> dict:
     )
 
 
-def compile_description(feature: dict) -> dict:
-    """Compile the description of the feature.
+def compile_description(properties: dict) -> dict:
+    """Compile the description of the feature from its properties.
 
     Args:
-        feature (dict): the feature dictionary
+        feature (dict): the properties dictionary
 
     Returns:
-        dict: feature with compiled description (URL and images HTML)
+        dict: properties with compiled description (URL and images HTML)
     """
-    name = feature.get(PROPERTIES, {}).get("name", "") \
-        or feature.get(PROPERTIES, {}).get("title", "")
-    url = feature.get(PROPERTIES, {}).get("url", "")
-    description = feature.get(PROPERTIES, {}).get("description", "")
+    name = properties.get("name", "") or properties.get("title", "")
+    url = properties.get("url", "")
+    description = properties.get("description", "")
 
     if url and name:
-        description = f'<a href="{url}">{name}</a>{description}'
+        description = f'<a href="{url}">{name}</a> {description}'
 
-    images = feature.get(PROPERTIES, {}).get("images", [])
+    images = properties.get("images", [])
     if images:
         for image in images:
             description += f'<img src="{image}">'
 
     if description:
-        feature[PROPERTIES][DESCRIPTION] = description
+        properties[DESCRIPTION] = description
 
-    return feature
+    return properties
 
 
 def load_json(filename: str) -> dict:

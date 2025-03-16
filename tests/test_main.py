@@ -164,21 +164,21 @@ class TestFilters(unittest.TestCase):
     def test_compile_no_description(self):
         feature = SAMPLE_GEOJSON_DATA[FEATURES][0]
 
-        compiled = compile_description(feature)[PROPERTIES].get(DESCRIPTION)
+        compiled = compile_description(feature[PROPERTIES]).get(DESCRIPTION)
         self.assertIsNone(compiled)
 
     def test_compile_description_url(self):
         """Test the compile_description filter."""
         feature = SAMPLE_GEOJSON_DATA[FEATURES][1]
 
-        compiled = compile_description(feature)[PROPERTIES][DESCRIPTION]
-        self.assertEqual(compiled, '<a href="https://www.metmuseum.org/">The Met</a>test')
+        compiled = compile_description(feature[PROPERTIES])[DESCRIPTION]
+        self.assertEqual(compiled, '<a href="https://www.metmuseum.org/">The Met</a> test')
 
     def test_compile_description_images(self):
         """Test the compile_description filter."""
         feature = SAMPLE_GEOJSON_DATA[FEATURES][2]
 
-        compiled = compile_description(feature)[PROPERTIES][DESCRIPTION]
+        compiled = compile_description(feature[PROPERTIES])[DESCRIPTION]
         self.assertEqual(compiled, '<img src="https://njbg.org/logo.png">')
 
 
