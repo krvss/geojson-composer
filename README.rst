@@ -63,7 +63,7 @@ Filters
 
 *dict_update_if*: Updates a dictionary with new key-value pairs if a condition (specified key contains the value) is met, returns the updated dictionary.
 
-*compile_description*: Compiles a description string wrapping Name property into a URL property and also adding Img tags for Images property
+*compile_description*: Compiles a description string wrapping Name property into a URL property and also adding Img tags for Images property.
 
 Development
 ***********

@@ -40,7 +40,7 @@ SAMPLE_GEOJSON_DATA = {
                 "id": 2,
                 "category": "museum",
                 "title": "The Met",
-                "description": "test",
+                "description": "<br>test",
                 "url": "https://www.metmuseum.org/"
             },
             "geometry": {
@@ -172,14 +172,14 @@ class TestFilters(unittest.TestCase):
         feature = SAMPLE_GEOJSON_DATA[FEATURES][1]
 
         compiled = compile_description(feature[PROPERTIES])[DESCRIPTION]
-        self.assertEqual(compiled, '<a href="https://www.metmuseum.org/">The Met</a> test')
+        self.assertEqual(compiled, "<a href='https://www.metmuseum.org/'>The Met</a><br>test")
 
     def test_compile_description_images(self):
         """Test the compile_description filter."""
         feature = SAMPLE_GEOJSON_DATA[FEATURES][2]
 
-        compiled = compile_description(feature[PROPERTIES])[DESCRIPTION]
-        self.assertEqual(compiled, '<img src="https://njbg.org/logo.png">')
+        compiled = compile_description(feature)[PROPERTIES][DESCRIPTION]
+        self.assertEqual(compiled, "<img src='https://njbg.org/logo.png'>")
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ build:
 	$(PYTHON) -m build --wheel
 
 # Publish to PyPI
-publish:
+publish: build
 	$(PYTHON) -m twine check dist/*
 	$(PYTHON) -m twine upload dist/*	
 
